@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STRANGE TRIVIA</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif; /* Standard font */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: transparent; /* Fully transparent background */
+            color: black; /* Standard text color */
+            text-align: center;
+        }
+
+        #quiz-container {
+            background-color: transparent; /* Fully transparent container */
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        #logo {
+            width: 150px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .question {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .answer {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: white; /* Change the answer color to white */
+        }
+
+        #next-button {
+            background-color: white; /* Change background color to white */
+            color: black; /* Change text color to black for visibility */
+            border: 2px solid #ff9900; /* Optional: Add a border for better visibility */
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s ease-in-out;
+        }
+
+        #next-button:hover {
+            background-color: #ffcc00; /* Change hover color for better effect */
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+            to {
+                opacity: 0;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .fadeOut {
+            animation: fadeOut 0.5s forwards;
+        }
+
+        .fadeIn {
+            animation: fadeIn 0.5s forwards;
+        }
+    </style>
+</head>
+<body>
+
+<div id="quiz-container">
+    <img id="logo" src="https://i.imgur.com/cyZ0Z21.png" alt="Premier League Logo">
+    <h1>STRANGE TRIVIA</h1>
+    <div id="question-container">
+        <div class="question" id="question">Loading question...</div>
+        <div class="answer" id="answer">Loading answer...</div>
+        <button id="next-button" onclick="nextQuestion()">Next Question</button>
+    </div>
+</div>
+
+<script>
+    // Question and answers data
+    const quizData = [
+        { question: 'What event triggered the U.S. entry into World War II?', answer: 'Pearl Harbor' },
+        { question: 'Australia is wider than what celestial body?', answer: 'The Moon' },
+        { question: 'Which planet spins clockwise in our solar system?', answer: 'Venus' },
+        { question: 'What is the real name for a hashtag?', answer: 'Octothorpe' },
+        { question: 'How long would it take to fall to the center of the Earth?', answer: '19 minutes' },
+        { question: 'How many time zones does Russia have?', answer: '11 time zones' },
+        { question: 'What is the smallest country in the world?', answer: 'Vatican City' },
+        { question: 'What can bees do that is higher than Mount Everest?', answer: 'Fly' },
+        { question: 'What smell do comets have?', answer: 'Rotten eggs' },
+        { question: 'Which planet is made almost entirely of diamonds?', answer: 'A diamond planet' },
+        { question: 'What is the closest planet to the sun in the solar system?', answer: 'Mercury' },
+        { question: 'Which continent is home to the Great Barrier Reef?', answer: 'Australia' },
+        { question: 'What is the largest animal in the world?', answer: 'Blue whale' },
+        { question: 'Which state is the smallest in the United States?', answer: 'Rhode Island' },
+        { question: 'Which country has more pyramids than any other in the world?', answer: 'Sudan' },
+        { question: 'What is the largest continent in the world?', answer: 'Asia' },
+        { question: 'What is the fastest animal on land?', answer: 'Cheetah' },
+        { question: 'What animal sweats milk?', answer: 'Platypus' },
+        { question: 'What is the smallest state in the United States?', answer: 'Rhode Island' },
+        { question: 'What animal can sleep while holding hands?', answer: 'Sea otters' },
+        { question: 'What color do bananas glow under black lights?', answer: 'Blue' },
+        { question: 'What continent is in all four hemispheres of the Earth?', answer: 'Africa' },
+        { question: 'What building is the tallest in the world?', answer: 'Burj Khalifa' },
+        { question: 'What animal\'s tongues can weigh as much as an elephant?', answer: 'Blue whale' },
+        { question: 'What animal sweats through its paws?', answer: 'Dogs' },
+        { question: 'If you could stretch out all the hair on your head end-to-end, how far could it reach?', answer: '12 miles long' },
+        { question: 'What is the fear of long words called?', answer: 'Hippopotomonstrosesquippedaliophobia' },
+        { question: 'How long is the circulatory system in the human body?', answer: 'More than 60,000 miles' },
+        { question: 'What organ is the largest in the human body?', answer: 'Skin' },
+        { question: 'How many times does the average human heart beat each day?', answer: '100,000 times' },
+        { question: 'What part of the human body cannot heal itself?', answer: 'Human teeth' },
+        { question: 'On average, how many spiders does a human unknowingly swallow while sleeping in their lifetime?', answer: 'About 10 spiders' },
+        { question: 'How many calories does the human brain burn each day?', answer: 'Around 400 to 500 calories' },
+        { question: 'What percentage of people are left-handed?', answer: 'Approximately 10%' },
+        { question: 'Which flying mammal uses echolocation to navigate?', answer: 'Bats' },
+        { question: 'What part of the human body grows faster than toenails?', answer: 'Fingernails' },
+        { question: 'How many letters does the longest English word have?', answer: '189,819 letters' },
+        { question: 'What burns 400-500 calories each day?', answer: 'Your brain' },
+        { question: 'What animal can be allergic to humans?', answer: 'Animals (can be allergic to humans)' },
+        { question: 'What happens to blood flow when wearing a necktie?', answer: 'Reduces by up to 7.5 percent' },
+        { question: 'What part of the human body never stops growing?', answer: 'Nose and ears' },
+        { question: 'Where is a shrimp\'s heart located?', answer: 'In its head' },
+        { question: 'What causes metal to expand when heated?', answer: 'Thermal expansion' },
+        { question: 'How many species of insects exist on Earth?', answer: 'More than one million' },
+        { question: 'What is the largest butterfly in the world?', answer: 'Queen Alexandra’s birdwing' },
+        { question: 'What percentage of orange cats are male?', answer: 'Around 80 percent' },
+        { question: 'What organization has been documenting the wonders of the world since 1888?', answer: 'National Geographic' },
+        { question: 'What was penicillin first called?', answer: 'Mold juice' },
+        { question: 'How do snakes smell?', answer: 'With their tongue' },
+        { question: 'What organ in the human body can’t the Pope donate?', answer: 'An organ donor' },
+        { question: 'Who was the first person processed at Ellis Island in New York City?', answer: 'A 15-year-old girl from Ireland' },
+        { question: 'What led to the creation of Google Images?', answer: 'Jennifer Lopez’s green dress at the 2000 Grammys' },
+        { question: 'What used to be a competitive art in the Olympic Games?', answer: 'Architecture' },
+        { question: 'Which famous structure was originally intended for Barcelona?', answer: 'The Eiffel Tower' },
+        { question: 'In what city is the Eiffel Tower located?', answer: 'Paris' },
+        { question: 'What is illegal to own only one of in Switzerland?', answer: 'Guinea pig' },
+        { question: 'Which four countries have national anthems with no lyrics?', answer: 'Spain, Bosnia and Herzegovina, Kosovo, San Marino' },
+        { question: 'What was Buzz Lightyear\'s original name?', answer: 'Lunar Larry' },
+        { question: 'What script was sold for $1?', answer: 'The Terminator' },
+        { question: 'Who holds the world record for the most Academy Awards?', answer: 'Walt Disney' },
+        { question: 'What flavor of broccoli did McDonald\'s create?', answer: 'Bubblegum' },
+        { question: 'What did a woman in the United Kingdom once call the police about?', answer: 'Not enough sprinkles on her ice cream' },
+        { question: 'Who is the national animal of Scotland?', answer: 'The unicorn' },
+        { question: 'What did the Hollywood sign originally say?', answer: 'Hollywoodland' },
+        { question: 'What is the full name of Cap’n Crunch?', answer: 'Horatio Magellan Crunch' },
+        { question: 'Which famous artist painted 55 self-portraits?', answer: 'Frida Kahlo' },
+        { question: 'What was ketchup once sold as?', answer: 'Medicine' },
+        { question: 'What did people eat to improve their skin?', answer: 'Arsenic' },
+        { question: 'What lived for 18 months without its head?', answer: 'A chicken' },
+        { question: 'What was sold for $1?', answer: 'The Terminator script' },
+        { question: 'What is the world record for the longest concert duration?', answer: '453 hours' },
+        { question: 'Which country released sushi-inspired Kit Kats?', answer: 'Japan' },
+        { question: 'What did people once eat to improve their skin?', answer: 'Arsenic' },
+        { question: 'Which ancient civilization built the famous city of Machu Picchu?', answer: 'The Inca civilization' },
+        { question: 'What floats, and what sinks between lemons and limes?', answer: 'Lemons float, limes sink' },
+        { question: 'What were originally designed to store pocket watches?', answer: 'Tiny pocket in jeans' },
+        { question: 'What is the quickest commercial flight in the world?', answer: 'A flight in Scotland' },
+        { question: 'What is the fear of other people’s opinions called?', answer: 'Allodoxaphobia' },
+        { question: 'What does the letter "Q" not appear in?', answer: 'Any American state’s name' },
+        { question: 'How many saunas does Finland have compared to cars?', answer: 'More saunas than cars' },
+        { question: 'How many vending machines are there per person in Japan?', answer: 'One for every 40 people' },
+        { question: 'What country has ranked as the happiest for 7 years straight?', answer: 'Finland' },
+        { question: 'What do Bottlenose dolphins have that is unique?', answer: 'Names for themselves' },
+        { question: 'What is the most popular beverage worldwide besides water?', answer: 'Tea' },
+        { question: 'How many pyramids does Sudan have compared to Egypt?', answer: 'More pyramids than Egypt' },
+        { question: 'What did McDonald\'s once flavor broccoli with?', answer: 'Bubblegum' },
+        { question: 'Which country has sushi-inspired Kit Kats?', answer: 'Japan' },
+        { question: 'What animal can change its gender multiple times throughout its life?', answer: 'Clownfish' },
+        { question: 'What is Cap’n Crunch’s full name?', answer: 'Horatio Magellan Crunch' },
+        { question: 'What language has the longest word with 189,819 letters?', answer: 'English' },
+        { question: 'What was Buzz Lightyear’s original name?', answer: 'Lunar Larry' },
+        { question: 'Which animal has blue blood due to the presence of copper in its blood cells?', answer: 'Horseshoe crab' },
+        { question: 'What does a platypus sweat?', answer: 'Milk' },
+        { question: 'What fruit glows blue under black lights?', answer: 'Bananas' },
+        { question: 'What animal\'s heart is located in its head?', answer: 'Shrimp' },
+        { question: 'Which fruit contains the most protein of all fruits?', answer: 'Guava' },
+        { question: 'What country has been ranked the happiest for 7 years?', answer: 'Finland' },
+        { question: 'How many Olympic medals does Walt Disney hold?', answer: '26' },
+        { question: 'What does mold juice refer to?', answer: 'Penicillin' }
+    ];
+
+    let shuffledQuestions = [];
+    let currentQuestion = 0;
+
+    // Function to shuffle an array
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+        }
+    }
+
+    // Initialize quiz
+    function initQuiz() {
+        shuffledQuestions = [...quizData]; // Create a copy of the original data
+        shuffleArray(shuffledQuestions); // Shuffle the questions
+        currentQuestion = Math.floor(Math.random() * shuffledQuestions.length); // Start from a random question
+        showQuestion();
+    }
+
+    function showQuestion() {
+        const questionContainer = document.getElementById("question");
+        const answerContainer = document.getElementById("answer");
+
+        questionContainer.innerText = shuffledQuestions[currentQuestion].question;
+        answerContainer.innerText = shuffledQuestions[currentQuestion].answer;
+
+        questionContainer.classList.remove('fadeOut');
+        answerContainer.classList.remove('fadeOut');
+
+        questionContainer.classList.add('fadeIn');
+        answerContainer.classList.add('fadeIn');
+    }
+
+    function nextQuestion() {
+        const questionContainer = document.getElementById("question");
+        const answerContainer = document.getElementById("answer");
+
+        questionContainer.classList.remove('fadeIn');
+        answerContainer.classList.remove('fadeIn');
+
+        questionContainer.classList.add('fadeOut');
+        answerContainer.classList.add('fadeOut');
+
+        setTimeout(() => {
+            if (shuffledQuestions.length > 1) {
+                // Remove the current question from the array
+                shuffledQuestions.splice(currentQuestion, 1); // Remove used question
+                currentQuestion = Math.floor(Math.random() * shuffledQuestions.length); // Pick new random question
+                showQuestion();
+            } else {
+                questionContainer.innerText = "Thank you for playing!";
+                answerContainer.innerText = "";
+                document.getElementById("next-button").style.display = "none"; // Hide the next button
+            }
+        }, 500);
+    }
+
+    // Start the quiz on page load
+    initQuiz();
+</script>
+
+</body>
+</html>
